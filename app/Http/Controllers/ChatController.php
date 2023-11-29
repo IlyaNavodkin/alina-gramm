@@ -4,24 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Chat;
+use App\Models\User;
 
 class ChatController extends Controller
 {
-    public function index()
+    public function chats()
     {
-        $chats = Chat::all();
-        return view('chats.index', compact('chats'));
-    }
+        $activeUser = User::query()->first();
 
-    public function getChatMessages(Chat $chat)
-    {
-        $messages = $chat->messages;
-        return view('chats.messages', compact('chat', 'messages'));
-    }
 
-    public function getChatUsers(Chat $chat)
-    {
-        $users = $chat->users;
-        return view('chats.users', compact('chat', 'users'));
+        $chats = Chat::with('owner', 'messages')->get();
+
+        return view('chats', ['chats' => $chats]);
     }
 }

@@ -23,5 +23,7 @@ Route::get('/', [\App\Http\Controllers\MainController::class, 'home']);
 
 Route::get('/messages', [\App\Http\Controllers\MessagesController::class, 'messages']);
 
+Route::get('/chats', [\App\Http\Controllers\ChatController::class, 'chats']);
+
 
 
