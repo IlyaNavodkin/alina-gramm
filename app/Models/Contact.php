@@ -9,7 +9,10 @@ class Contact extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+    public $timestamps = false;
     protected $fillable = [
+        'id',
         'user_id_from',
         'user_id_to',
         'status',

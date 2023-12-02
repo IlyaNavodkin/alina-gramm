@@ -9,6 +9,7 @@ class CreateContactsTable extends Migration
     public function up()
     {
         Schema::create('contacts', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('user_id_from');
             $table->unsignedBigInteger('user_id_to');
@@ -18,7 +19,6 @@ class CreateContactsTable extends Migration
             $table->foreign('user_id_from')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('user_id_to')->references('id')->on('users')->onDelete('cascade');
 
-            $table->primary(['user_id_from', 'user_id_to']);
             $table->index(['user_id_from', 'user_id_to']);
         });
     }

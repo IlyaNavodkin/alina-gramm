@@ -17,7 +17,7 @@ class Chat extends Model
 
     public function owner()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class);
     }
 
     public function messages()
@@ -27,6 +27,6 @@ class Chat extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'chat_user', 'chat_id', 'user_id');
+        return $this->belongsToMany(User::class);
     }
 }

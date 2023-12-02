@@ -17,4 +17,18 @@ class MessagesController extends Controller
 
         return view('messages', ['messages' => $messages]);
     }
+
+    public function sendMessage(Request $request, $chatId, $userId)
+{
+    // Ваш код для сохранения сообщения в базе данных
+
+    $message = new Message();
+    $message->content = $request->input('message');
+    $message->chat_id = $chatId;
+    // Добавьте user_id, если у вас есть отношение "один ко многим" с таблицей пользователей
+    $message->user_id = $userId; // предполагается, что у вас есть аутентифицированный пользователь
+    $message->save();
+
+    return redirect()->back();
+}
 }

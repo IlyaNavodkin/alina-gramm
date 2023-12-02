@@ -31,6 +31,7 @@
                                 <button type="submit" class="btn btn-danger">Удалить</button>
                             </form>
                             <a class="btn btn-primary">Изменить</a>
+                            <a href="{{ route('users.getChats', ['id' => $user->id]) }}" method="get" class="btn btn-primary">Войти через него</a>
                         </div>
                     </td>
                 </tr>

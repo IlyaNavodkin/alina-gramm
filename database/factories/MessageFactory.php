@@ -12,8 +12,8 @@ class MessageFactory extends Factory
     public function definition()
     {
         return [
-            'chat_id' => \App\Models\Chat::factory(),
-            'user_id' => \App\Models\User::factory(),
+            'chat_id' => \App\Models\Chat::factory()-> create()->id,
+            'user_id' => \App\Models\User::factory()-> create()->id,
             'reply_message_id' => null,
             'content' => $this->faker->sentence,
         ];

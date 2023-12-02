@@ -27,7 +27,8 @@ class User extends Model
     ];
     public function chats()
     {
-        return $this->hasMany(Chat::class, 'owner_id');
+        // return $this->hasMany(Chat::class, 'owner_id');
+        return $this->belongsToMany(Chat::class);
     }
 
     public function messages()
