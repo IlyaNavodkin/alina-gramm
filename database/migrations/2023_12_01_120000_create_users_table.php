@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->boolean('banned')->default(false);
             $table->enum('roles', ['user', 'admin'])->default('user');
             $table->string('login')->unique();
+            $table->string('avatar')->default('media/users/avatars/default.png');
         });
     }
 

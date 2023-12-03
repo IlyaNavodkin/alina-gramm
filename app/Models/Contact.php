@@ -28,4 +28,8 @@ class Contact extends Model
     {
         return $this->belongsTo(User::class, 'user_id_to');
     }
+    public function messages()
+    {
+        return $this->hasMany(ContactsMessage::class);
+    }
 }

@@ -123,7 +123,103 @@ class UserController extends Controller
         return redirect('/users');
     }
 
+    public function editUser($id)
+    {
+        $activeUser = User::find($id);
+        $avatarPath = asset( $activeUser->avatar);
 
+        return view('user-edit', compact('activeUser', 'avatarPath'));
+    }
+
+    public function edit(Request $request)
+    {
+        $isValid = $request->validate([
+            'email' => [
+                'required',
+                'min:4',
+                'max:100',
+            ],
+            'phone' => [
+                'required',
+                'min:4',
+                'max:20',
+            ],
+            'login' => [
+                'required',
+                'min:4',
+                'max:50',
+            ],
+        ]);
+
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $login = $request->input('login');
+        $id = $request->input('id');
+
+        // Проверка уникальности логина, email и телефона в базе данных
+        $loginExists = User::where('login',  $login)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        $emailExists = User::where('email', $email)
+            ->where('id', '!=',  $id)
+            ->exists();
+
+        $phoneExists = User::where('phone', $phone)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        // Если найден дубликат, вернуть ошибку
+        if ($loginExists) {
+            return back()->withErrors(['login' => 'Пользователь с таким логином уже существует.']);
+        }
+
+        if ($emailExists) {
+            return back()->withErrors(['email' => 'Пользователь с таким email уже существует.']);
+        }
+
+        if ($phoneExists) {
+            return back()->withErrors(['phone' => 'Пользователь с таким телефоном уже существует.']);
+        }
+
+        $user = User::find($id);
+
+        if($email == $user->email && $phone == $user->phone && $login == $user->login) {
+            return redirect()->back()->with('success', 'Вы не изменили данные пользователя');
+        }
+
+        $user->email = $email;
+        $user->phone = $phone;
+        $user->login = $login;
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Данные пользователя обновлены');
+    }
+
+    public function uploadUserAvatar(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $image = $request->file('image');
+        $id = $request->input('id');
+
+        $imageName = 'avatar'.$id.'.'.$image->extension();
+
+        $relateAvatarFolderPath = 'media/users/avatars';
+        $publicAvatarFolderPath = asset($relateAvatarFolderPath);
+
+        $user = User::find($id);
+
+        $user->avatar = $relateAvatarFolderPath. '/' .$imageName;
+        $user->save();
+
+        $image->move($relateAvatarFolderPath, $imageName);
+
+        return back()->with('success', 'Аватар пользователя успешно загружен.');
+    }
 
     public function getUserContacts(User $user)
     {

@@ -91,4 +91,21 @@ class ContactController extends Controller
 
         return redirect()->back()->with('success', 'Контакт убран');
     }
+    public function openContactChat($contactId, $activeUserId){
+        $activeUser = User::findOrFail($activeUserId);
+
+        $contact = Contact::findOrFail($contactId)->load('userFrom', 'userTo');
+        $contact->messages;
+
+        $otherUser = "";
+        if($contact->user_id_from == $activeUser->id) {
+            $otherUser = $contact->userTo;
+        } else {
+            $otherUser = $contact->userFrom;
+        }
+
+        // return $contact;
+        return view('contacts-chat', compact('contact', 'activeUser', "otherUser"));
+
+    }
 }

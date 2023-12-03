@@ -36,6 +36,7 @@
                     @csrf
                     <button type="submit" class="btn btn-danger mt-3">Удалить</button>
                 </form>
+                <a href="{{ route('openContactChat', ['contactId' => $contact->id,'activeUserId' => $activeUser->id]) }}" class="btn btn-primary mr-2 mt-2">Написать пользователю</a>
             </div>
         @endforeach
 
@@ -51,6 +52,10 @@
                 <form action="{{ route('acceptContact', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
                     @csrf
                     <button type="submit" class="btn btn-success mt-3">Принять</button>
+                </form>
+                <form action="{{ route('deleteContact', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-danger mt-3">Отклонить</button>
                 </form>
             </div>
         @endforeach

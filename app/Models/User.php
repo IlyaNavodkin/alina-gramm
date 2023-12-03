@@ -16,6 +16,7 @@ class User extends Model
         'banned',
         'roles',
         'login',
+        'avatar',
     ];
 
     protected $hidden = [
