@@ -8,18 +8,13 @@ use App\Models\Message;
 
 class MessagesController extends Controller
 {
-    public function messages(){
+    public function getAll(){
         $messages = Message::with('user', 'chat')->get();
 
-        // $firstMessage = Message::with(['user', 'chat'])->first();
-
-        // $firstMessageChat = $firstMessage->chat;
-        // $firstMessageUser = $firstMessage->user;
-
-        return view('messages', ['messages' => $messages]);
+        return view('admin-panel.messages.getAll', ['messages' => $messages]);
     }
 
-    public function sendMessage(Request $request, $chatId, $userId)
+    public function send(Request $request, $chatId, $userId)
     {
     // Ваш код для сохранения сообщения в базе данных
 
@@ -54,7 +49,7 @@ class MessagesController extends Controller
     }
 
 
-    public function deleteMessage(Request $request)
+    public function delete(Request $request)
     {
         $messageId = $request->input('messageId');
         $message = ContactsMessage::find($messageId);

@@ -30,8 +30,9 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Удалить</button>
                             </form>
-                            <a href="{{ route('editUser', ['id' => $user->id]) }}" method="get" class="btn btn-primary">Изменить</a>
-                            <a href="{{ route('users.getChats', ['id' => $user->id]) }}" method="get" class="btn btn-primary">Войти через него</a>
+                            <a href="{{ route('users.profile', ['id' => $user->id]) }}" class="btn btn-primary mt-2">Изменить</a>
+                            <br>
+                            <a href="{{ route('users.chats', ['id' => $user->id]) }}"  class="btn btn-success mt-2">Войти через него</a>
                         </div>
                     </td>
                 </tr>

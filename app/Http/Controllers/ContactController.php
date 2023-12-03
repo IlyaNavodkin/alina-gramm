@@ -13,7 +13,7 @@ class ContactController extends Controller
         $contacts = Contact::all();
         return view('contacts.index', compact('contacts'));
     }
-    public function addContact( Request $request, $userId)
+    public function create( Request $request, $userId)
     {
         $login = $request->input('login');
 
@@ -60,7 +60,7 @@ class ContactController extends Controller
 
         return redirect()->back()->with('success', 'Запрос на контакт отправлен');
     }
-    public function acceptContact($userIdFrom, $userIdTo)
+    public function accept($userIdFrom, $userIdTo)
     {
         $contact = Contact::where([
             'user_id_from' => $userIdFrom,
@@ -77,7 +77,7 @@ class ContactController extends Controller
         return redirect()->back()->with('success', 'Контакт добавлен');
     }
 
-    public function deleteContact($userIdFrom, $userIdTo){
+    public function delete($userIdFrom, $userIdTo){
         $contact = Contact::where([
             'user_id_from' => $userIdFrom,
             'user_id_to' => $userIdTo,
@@ -91,7 +91,7 @@ class ContactController extends Controller
 
         return redirect()->back()->with('success', 'Контакт убран');
     }
-    public function openContactChat($contactId, $activeUserId){
+    public function chat($contactId, $activeUserId){
         $activeUser = User::findOrFail($activeUserId);
 
         $contact = Contact::findOrFail($contactId)->load('userFrom', 'userTo');
@@ -105,7 +105,7 @@ class ContactController extends Controller
         }
 
         // return $contact;
-        return view('contacts-chat', compact('contact', 'activeUser', "otherUser"));
+        return view('contacts.chat', compact('contact', 'activeUser', "otherUser"));
 
     }
 }

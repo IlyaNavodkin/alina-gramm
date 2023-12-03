@@ -48,9 +48,9 @@ class ChatController extends Controller
         $user = User::findOrFail($userId);
 
         // Проверяем, присутствует ли пользователь в данном чате
-        if ($chat->users()->where('user_id', $user->id)->exists()) {
+        if ($chat->getAll()->where('user_id', $user->id)->exists()) {
             // Удаляем пользователя из чата
-            $chat->users()->detach($user->id);
+            $chat->getAll()->detach($user->id);
 
             // Можете также добавить дополнительные действия при выходе из чата
 
@@ -76,9 +76,9 @@ class ChatController extends Controller
     }
 
     // Проверяем, что пользователь еще не присутствует в данном чате
-    if (!$chat->users()->where('user_id', $user->id)->exists()) {
+    if (!$chat->getAll()->where('user_id', $user->id)->exists()) {
         // Присоединяем пользователя к чату
-        $chat->users()->attach($user->id);
+        $chat->getAll()->attach($user->id);
 
         // Можете также добавить дополнительные действия при добавлении пользователя в чат
 

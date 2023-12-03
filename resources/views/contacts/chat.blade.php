@@ -28,7 +28,7 @@
                             <strong>Reply Id: {{ $message->reply_message_ids }}</strong><br>
                         @endif
                         {{ $message->content }}<br>
-                        <form action="{{ route('deleteMessage') }}"  method="post">
+                        <form action="{{ route('messages.delete') }}"  method="post">
                             @csrf
                             <input type="hidden" name="messageId" value="{{ $message->id }}">
                             <button type="submit" class="btn btn-danger mt-3">Удалить</button>
@@ -55,7 +55,7 @@
             {{ session('error') }}
         </div>
         @endif
-        <form action="{{ route('sendContactMessage', ['activeUserId' => $activeUser->id]) }}" method="post">
+        <form action="{{ route('messages.contact.send', ['activeUserId' => $activeUser->id]) }}" method="post">
             @csrf
             <div class="form-group">
                 <label for="message">Новое сообщение:</label>

@@ -13,23 +13,28 @@ class MyClass {
 }
 class UserController extends Controller
 {
-    public function users(){
+    public function getAll(){
         $users = new User();
 
-        return view('users', ['users' => $users->all()]);
+        return view('admin-panel.users.user-list', ['users' => $users->all()]);
     }
 
-    public function createNewUser(){
-        return view('create-new-user');
+    public function register(){
+        return view('users.register');
+    }
+
+    public function login(){
+        return redirect()->back();
     }
 
     public function delete($id)
     {
         $userForDelete=User::query()->where('id', $id)->delete();
-        return redirect('/users');
+
+        return redirect()->back()->with('success', 'Пользователь создан');
     }
 
-    public function getUserChats($id)
+    public function chats($id)
     {
         // Получаем активного пользователя с его чатами
         $activeUser = User::with('chats')->findOrFail($id);
@@ -63,7 +68,7 @@ class UserController extends Controller
 
         // return compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts');
         // Возвращаем представление с активным пользователем и чатами
-        return view('user-chats', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+        return view('users.info', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
 
         // return $activeUser;
     }
@@ -120,15 +125,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect('/users');
-    }
-
-    public function editUser($id)
-    {
-        $activeUser = User::find($id);
-        $avatarPath = asset( $activeUser->avatar);
-
-        return view('user-edit', compact('activeUser', 'avatarPath'));
+        return redirect()->back()->with('success', 'Пользователь создан');
     }
 
     public function edit(Request $request)
@@ -197,7 +194,15 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Данные пользователя обновлены');
     }
 
-    public function uploadUserAvatar(Request $request)
+    public function profile($id)
+    {
+        $activeUser = User::find($id);
+        $avatarPath = asset( $activeUser->avatar);
+
+        return view('users.profile', compact('activeUser', 'avatarPath'));
+    }
+
+    public function uploadAvatar(Request $request)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

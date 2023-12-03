@@ -49,7 +49,7 @@
         </form>
 
         <img src="{{ $avatarPath }}" width="200" height="200"  alt="Uploaded Image">
-        <form class="mb-4" action="{{ route('upload.image') }}" method="post" enctype="multipart/form-data">
+        <form class="mb-4" action="{{ route('users.uploadAvatar') }}" method="post" enctype="multipart/form-data">
             @csrf
             <input name="id" id="id" class="form-control"  type="hidden" value="{{ $activeUser->id }}">
 

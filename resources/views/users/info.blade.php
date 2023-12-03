@@ -32,11 +32,11 @@
                         <strong>Phone {{ $contact->userFrom->phone }}</strong><br>
                     </div>
                 @endif
-                <form action="{{ route('deleteContact', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
+                <form action="{{ route('contacts.delete', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
                     @csrf
                     <button type="submit" class="btn btn-danger mt-3">Удалить</button>
                 </form>
-                <a href="{{ route('openContactChat', ['contactId' => $contact->id,'activeUserId' => $activeUser->id]) }}" class="btn btn-primary mr-2 mt-2">Написать пользователю</a>
+                <a href="{{ route('contacts.chat', ['contactId' => $contact->id,'activeUserId' => $activeUser->id]) }}" class="btn btn-primary mr-2 mt-2">Написать пользователю</a>
             </div>
         @endforeach
 
@@ -49,11 +49,11 @@
                     <strong>Email {{ $contact->userFrom->email }}</strong><br>
                     <strong>Phone {{ $contact->userFrom->phone }}</strong><br>
                 </div>
-                <form action="{{ route('acceptContact', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
+                <form action="{{ route('contacts.accept', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
                     @csrf
                     <button type="submit" class="btn btn-success mt-3">Принять</button>
                 </form>
-                <form action="{{ route('deleteContact', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
+                <form action="{{ route('contacts.delete', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
                     @csrf
                     <button type="submit" class="btn btn-danger mt-3">Отклонить</button>
                 </form>
@@ -68,7 +68,7 @@
                     <strong>Email {{ $contact->userTo->email }}</strong><br>
                     <strong>Phone {{ $contact->userTo->phone }}</strong><br>
                 </div>
-                <form action="{{ route('deleteContact', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
+                <form action="{{ route('contacts.delete', ['userIdFrom' => $contact->userFrom->id, 'userIdTo' => $contact->userTo->id]) }}"  method="post">
                     @csrf
                     <button type="submit" class="btn btn-danger mt-3">Удалить</button>
                 </form>
@@ -78,7 +78,7 @@
         </div>
         <div class="col-md-5 rounded border border-success p-3 m-3" >
             <h2>Добавить контакт</h2>
-            <form action="{{ route('addContact', ['userId' => $activeUser->id]) }}" method="post">
+            <form action="{{ route('contacts.create', ['userId' => $activeUser->id]) }}" method="post">
                 @if(session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
