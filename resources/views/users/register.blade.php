@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <form method="post" action="/users/create" class="mb-4">
+        <form method="post"  action="{{ route('users.register') }}" class="mb-4">
             @csrf
 
             <div class="mb-3">

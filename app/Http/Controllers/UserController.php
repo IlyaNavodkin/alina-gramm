@@ -6,13 +6,33 @@ use App\Models\User;
 use App\Models\Chat;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class MyClass {
-    public $name1;
-    public $booleanProperty;
-}
 class UserController extends Controller
 {
+    public function dashboard()
+    {
+        $activeUser = Auth::user();
+        $id = $activeUser->id;
+
+        $commingContacts = Contact::where('user_id_from', $id)->where('status', 'pending')->with('userFrom')->get();
+
+        $acceptedContacts = Contact::where('status', 'accepted')
+        ->where(function ($query) use ($id)
+        {
+            $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
+        })
+        ->with('userTo')
+        ->with('userFrom')
+        ->get();
+
+        $pendingContacts = Contact::where('status', 'pending')
+        ->where('user_id_to', $id)->with('userTo')->get();
+
+        return view('users.my-contacts', compact('activeUser', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+        // return Auth::user();
+    }
+
     public function getAll(){
         $users = new User();
 
@@ -20,12 +40,86 @@ class UserController extends Controller
     }
 
     public function register(){
-        return view('users.register');
+        return view('users.singup');
     }
 
     public function login(){
-        return redirect()->back();
+        return view('users.login');
     }
+
+    public function tryAuth(Request $request){
+
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        // Хешируем введенный пароль
+        $hashedPassword = bcrypt($password);
+
+        // Пытаемся аутентифицировать пользователя с хешированным паролем
+        $isPass = Auth::attempt(['email' => $email, 'password' => $hashedPassword]);
+
+        // Попытка аутентификации
+        if ($isPass) {
+            // Аутентификация успешна
+            $request->session()->regenerate();
+            return view('users.my-contacts');
+        } else {
+            // Неверные учетные данные
+            return "Неверные учетные данные";
+        }
+    }
+
+    // public function tryAuth(Request $request){
+
+    //     $email = $request->input('email');
+    //     $password = $request->input('password');
+
+    //     $user = User::where('email', $email)->first();
+    //     if(!$user){
+    //         return "Пользователь не найден";
+    //         // return redirect()->back()->with('error', 'Пользователь не найден');
+    //     }
+
+    //     if($password != $user->password){
+    //         return "Неверный пароль";
+    //         // return redirect()->back()->with('error', 'Неверный пароль');
+    //     }
+
+    //     $id = $user->id;
+    //     // Получаем активного пользователя с его чатами
+    //     $activeUser = User::with('chats')->findOrFail($id);
+
+    //     // $pendingContacts = Contact::where('user_id_to', $id)->where('status', 'pending')->with('userTo')->get();
+    //     $commingContacts = Contact::where('user_id_from', $id)->where('status', 'pending')->with('userFrom')->get();
+    //     // $acceptedContacts = Contact::where('status', 'accepted')->where('user_id_to', $id)
+    //     // ->orWhere('user_id_from', $id)
+    //     // ->with('userTo')
+    //     // ->get();
+
+    //     $acceptedContacts = Contact::where('status', 'accepted')
+    //     ->where(function ($query) use ($id)
+    //     {
+    //         $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
+    //     })
+    //     ->with('userTo')
+    //     ->with('userFrom')
+    //     ->get();
+
+    //     $pendingContacts = Contact::where('status', 'pending')
+    //     ->where('user_id_to', $id)->with('userTo')->get();
+
+    //     // Получаем все чаты
+    //     $allChats = Chat::all();
+
+    //     // Коллекция с чатами, в которых пользователь не участвует
+    //     $notUsedChats = $allChats->reject(function ($chat) use ($activeUser) {
+    //         return $activeUser->chats->contains('id', $chat->id);
+    //     });
+    //     $nulll = $commingContacts->count();
+    //     // return view('users.info', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+    //     return view('users.my-contacts', compact('activeUser', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+    //     // return view('users.my-contacts', ['id' => $user->id]);
+    // }
 
     public function delete($id)
     {
@@ -66,9 +160,8 @@ class UserController extends Controller
             return $activeUser->chats->contains('id', $chat->id);
         });
 
-        // return compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts');
-        // Возвращаем представление с активным пользователем и чатами
-        return view('users.info', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+        // return view('users.info', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+        return view('users.my-contacts', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
 
         // return $activeUser;
     }
@@ -88,45 +181,6 @@ class UserController extends Controller
         return $filtered;
     }
 
-    public function create(Request $request)
-    {
-        $isValid = $request->validate([
-            'email' => [
-                'required',
-                'min:4',
-                'max:100',
-                'unique:users,email'
-            ],
-            'phone' => [
-                'required',
-                'min:4',
-                'max:20',
-                'unique:users,phone'
-            ],
-            'login' => [
-                'required',
-                'min:4',
-                'max:50',
-                'unique:users,login'
-            ],
-            'password' => [
-                'required',
-                'min:6',
-            ],
-        ]);
-
-        $user = new User();
-        $user->email = $request->input('email');
-        $user->phone = $request->input('phone');
-        $user->password = $request->input('password');
-        $user->login = $request->input('login');
-        $user->banned = false;
-        $user->roles='User';
-
-        $user->save();
-
-        return redirect()->back()->with('success', 'Пользователь создан');
-    }
 
     public function edit(Request $request)
     {

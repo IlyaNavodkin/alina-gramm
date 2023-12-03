@@ -16,15 +16,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin-panel/users/user-list', [\App\Http\Controllers\UserController::class, 'getAll'])->name('users.getAll');
 Route::get('/admin-panel', [\App\Http\Controllers\MainController::class, 'home']);
 
-Route::get('/users/chats/{id}', [\App\Http\Controllers\UserController::class, 'chats'])->name('users.chats');
+Route::post('/users/chats/{id}', [\App\Http\Controllers\UserController::class, 'chats'])->name('users.chats');
+
 Route::get('/users/profile/{id}', [\App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
 Route::post('/users/edit', [\App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
 Route::post('/users/upload-image', [\App\Http\Controllers\UserController::class, 'uploadAvatar'])->name('users.uploadAvatar');
 Route::post('/users/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
 Route::delete('/users/delete/{id}', [\App\Http\Controllers\UserController::class, 'delete'])->name('users.delete');
-Route::get('/users/register', [\App\Http\Controllers\UserController::class, 'register'])->name('users.register');
-Route::get('/users/login', [\App\Http\Controllers\UserController::class, 'register'])->name('users.login');
 
+Route::get('/auth/show-register-form', [\App\Http\Controllers\AuthController::class, 'showRegistrationForm'])->name('auth.show-register-form');
+Route::get('/auth/show-login-form', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('auth.show-login-form');
+Route::post('/auth/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('auth.login');
+Route::post('/auth/register', [\App\Http\Controllers\AuthController::class, 'register'])->name('auth.register');
+Route::post('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
+});
 
 
 Route::post('/contacts/create/{userId}', [\App\Http\Controllers\ContactController::class, 'create'])->name('contacts.create');
@@ -37,7 +44,7 @@ Route::get('/contacts/chat/{contactId}/{activeUserId}', [\App\Http\Controllers\C
 Route::post('/messages/delete', [\App\Http\Controllers\MessagesController::class, 'delete'])->name('messages.delete');
 Route::post('/messages/send/{chatId}/{userId}', [\App\Http\Controllers\MessagesController::class, 'send'])->name('messages.send');
 Route::post('/messages/contact/send/{activeUserId}', [\App\Http\Controllers\MessagesController::class, 'sendContactMessage'])->name('messages.contact.send');
-Route::get('/messages', [\App\Http\Controllers\MessagesController::class, 'getAll'])->name('messages.getAll');
+Route::get('/messages/get-all', [\App\Http\Controllers\MessagesController::class, 'getAll'])->name('messages.getAll');
 
 
 
