@@ -7,10 +7,15 @@
         <div class="container">
             <div class="row justify-content-around">
             <div class="block col-auto ">
+                @if ($errors->has('notPass'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('notPass') }}
+                    </div>
+                @endif
                     <section id="registration" class="registration">
                         <h2 class="form-title">Войти</h2>
                         <h3 class="form-headline">Рады видеть вас снова!<h3>
-                            <form class="registration-form" action="/auth/login"  id="form_id" method="post" onsubmit="return validateForm('form_id','email','password');" >
+                            <form class="registration-form" action="{{ route('auth.login') }}"  id="form_id" method="post" onsubmit="return validateForm('form_id','email','password');" >
                                 @csrf
 
                                 <div class="inputbox">
@@ -28,7 +33,7 @@
 
                                 <input type="submit" value="Войти" class="button-click" id="submit">
 
-                                <p class="form-text">Еще нет аккаунта?<a href="/auth/show-register-form" class="registration-link"> Создать учетную запись</a></p>
+                                <p class="form-text">Еще нет аккаунта?<a href={{ route('register') }} class="registration-link"> Создать учетную запись</a></p>
                             </form>
                     </section>
                     <div class="registration-img">

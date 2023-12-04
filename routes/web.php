@@ -13,30 +13,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [\App\Http\Controllers\MainController::class, 'home'])->name('home');
+
 Route::get('/admin-panel/users/user-list', [\App\Http\Controllers\UserController::class, 'getAll'])->name('users.getAll');
 Route::get('/admin-panel', [\App\Http\Controllers\MainController::class, 'home']);
 
 Route::post('/users/chats/{id}', [\App\Http\Controllers\UserController::class, 'chats'])->name('users.chats');
 
-Route::get('/users/profile/{id}', [\App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
 Route::post('/users/edit', [\App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
 Route::post('/users/upload-image', [\App\Http\Controllers\UserController::class, 'uploadAvatar'])->name('users.uploadAvatar');
 Route::post('/users/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
 Route::delete('/users/delete/{id}', [\App\Http\Controllers\UserController::class, 'delete'])->name('users.delete');
 
-Route::get('/auth/show-register-form', [\App\Http\Controllers\AuthController::class, 'showRegistrationForm'])->name('auth.show-register-form');
-Route::get('/auth/show-login-form', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('auth.show-login-form');
+Route::get('/register', [\App\Http\Controllers\AuthController::class, 'showRegistrationForm'])->name('register');
+Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
+
 Route::post('/auth/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('auth.login');
 Route::post('/auth/register', [\App\Http\Controllers\AuthController::class, 'register'])->name('auth.register');
-Route::post('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
+    Route::get('/users/profile/{id}', [\App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
+
+    Route::post('/users/findByLogin', [\App\Http\Controllers\UserController::class, 'findByLogin'])->name('users.findByLogin');
+
+    Route::post('/contacts/create', [\App\Http\Controllers\ContactController::class, 'create'])->name('contacts.create');
+    Route::post('/contacts/accept', [\App\Http\Controllers\ContactController::class, 'accept'])->name('contacts.accept');
+    Route::post('/contacts/delete', [\App\Http\Controllers\ContactController::class, 'delete'])->name('contacts.delete');
+
 });
 
 
-Route::post('/contacts/create/{userId}', [\App\Http\Controllers\ContactController::class, 'create'])->name('contacts.create');
-Route::post('/contacts/accept/{userIdFrom}/{userIdTo}', [\App\Http\Controllers\ContactController::class, 'accept'])->name('contacts.accept');
-Route::post('/contacts/delete/{userIdFrom}/{userIdTo}', [\App\Http\Controllers\ContactController::class, 'delete'])->name('contacts.delete');
 Route::get('/contacts/chat/{contactId}/{activeUserId}', [\App\Http\Controllers\ContactController::class, 'chat'])->name('contacts.chat');
 
 

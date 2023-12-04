@@ -28,7 +28,7 @@
                 </div>
                 @endif
 
-                <form method="post" action="/auth/register" class="registration-form">
+                <form method="post" action="{{ route('auth.register') }}"  class="registration-form">
                     @csrf
                     <div class="inputbox">
                         <input type="text" id="login" name="login" class="input-field" required>
@@ -59,7 +59,7 @@
                     {{-- <input type="submit" form="myForm" onclick="return validateForm()" value="Зарегистрироваться" class="input-field button-click" id="submitButton"> --}}
                     <button type="submit" class="input-field button-click">Зарегистрироваться</button>
 
-                    <p class="form-text">Уже есть аккаунта?<a href="/auth/show-login-form" class="registration-link"> Войти в учетную запись</a></p>
+                    <p class="form-text">Уже есть аккаунта?<a href="{{ route('login') }}" class="registration-link"> Войти в учетную запись</a></p>
                 </form>
             </section>
 

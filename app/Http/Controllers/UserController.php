@@ -26,11 +26,50 @@ class UserController extends Controller
         ->with('userFrom')
         ->get();
 
+        foreach ($acceptedContacts as $contact) {
+            if ($contact->user_id_from == $id) {
+                $contact->friend = $contact->userTo;
+            } else {
+                $contact->friend = $contact->userFrom;
+            }
+        }
+
         $pendingContacts = Contact::where('status', 'pending')
         ->where('user_id_to', $id)->with('userTo')->get();
 
-        return view('users.my-contacts', compact('activeUser', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
+        $avatarPath = asset( $activeUser->avatar);
+
+
+        return view('users.my-contacts', compact('activeUser', 'pendingContacts',
+        'acceptedContacts', 'commingContacts', 'avatarPath'));
         // return Auth::user();
+    }
+
+
+    public function findByLogin(Request $request){
+        $activeUser = Auth::user();
+
+        $login = $request->input('login');
+        $users = User::where('login', 'LIKE', "%$login%")->with('contacts')->get();
+
+        $unknowUsers = [];
+        foreach ($users as $user) {
+            if ($user->id == $activeUser->id) {
+                continue;
+            }
+
+            $contacts = $user->contacts;
+
+            foreach ($contacts as $contact) {
+                if ($contact->id == $activeUser->id || $contact->user_id_to == $activeUser->id) {
+                    continue;
+                }
+            }
+
+            $unknowUsers[] = $user;
+        }
+
+        return response()->json(['users' => $unknowUsers]);
     }
 
     public function getAll(){
@@ -248,9 +287,9 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Данные пользователя обновлены');
     }
 
-    public function profile($id)
+    public function profile()
     {
-        $activeUser = User::find($id);
+        $activeUser = Auth::user();
         $avatarPath = asset( $activeUser->avatar);
 
         return view('users.profile', compact('activeUser', 'avatarPath'));

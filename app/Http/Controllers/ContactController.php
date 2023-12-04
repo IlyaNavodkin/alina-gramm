@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
 {
@@ -13,59 +14,68 @@ class ContactController extends Controller
         $contacts = Contact::all();
         return view('contacts.index', compact('contacts'));
     }
-    public function create( Request $request, $userId)
+    public function create( Request $request)
     {
-        $login = $request->input('login');
+        $activeUser = Auth::user();
+        $otherUserId = $request->input('userId');
 
-        if (!$login) {
-            $message = "Логин не указан";
-            return redirect()->back()->with('error', $message);
+        $otherUser = User::where('id', $otherUserId)->first();
+
+        if (!$otherUser) {
+            $message = "Пользователь с id $otherUserId не найден";
+            return response()->json(['error' => $message], 404);
         }
 
-        $user = User::where('login', $login)->first();
-
-        if (!$user) {
-            $message = "Пользователь с логином $login не найден, проверьте правильность ввода";
-            return redirect()->back()->with('error', $message);
-        }
-
-        if ($user->id == $userId) {
+        if ($otherUser->id == $activeUser->id) {
             $message = "Вы не можете добавить самого себя в свои контакты";
-            return redirect()->back()->with('error', $message);
+            return response()->json(['error' => $message], 400);
         }
 
-        $existContact = Contact::where([
-            'user_id_from' => $userId,
-            'user_id_to' => $user->id,
-        ])->first();
+        // $existContact = Contact::where([
+        //     'user_id_from' => $userId,
+        //     'user_id_to' => $user->id,
+        // ])->first();
 
-        if ($existContact) {
-            if($existContact->status == "accepted") {
-                $message = "Вы уже добавили пользователя с логином $login в свои контакты";
-                return redirect()->back()->with('error', $message);
-            }
+        // if ($existContact) {
+        //     if($existContact->status == "accepted") {
+        //         $message = "Вы уже добавили пользователя с логином $login в свои контакты";
+        //         return redirect()->back()->with('error', $message);
+        //     }
 
-            $message = "Вы уже добавили пользователя с логином $login в свои контакты";
-            return redirect()->back()->with('error', $message);
+        //     $message = "Вы уже добавили пользователя с логином $login в свои контакты";
+        //     return redirect()->back()->with('error', $message);
+        // }
+
+        $existingContact = Contact::where(function ($query) use ($activeUser, $otherUser) {
+            $query->where('user_id_from', $activeUser->id)
+                ->where('user_id_to', $otherUser->id);
+        })->orWhere(function ($query) use ($activeUser, $otherUser) {
+            $query->where('user_id_from', $otherUser->id)
+                ->where('user_id_to', $activeUser->id);
+        })->first();
+
+        if ($existingContact) {
+            $message = "Контакт уже существует между пользователями";
+            return response()->json(['error' => $message], 400);
         }
 
         $contact = new Contact();
 
-        $contact->user_id_from = $userId;
-        $contact->user_id_to = $user->id;
+        $contact->user_id_from = $activeUser->id;
+        $contact->user_id_to = $otherUser->id;
         $contact->blocked = 0;
         $contact->status = "pending";
 
         $contact->save();
 
-        return redirect()->back()->with('success', 'Запрос на контакт отправлен');
+        return response()->json(['message' => 'Friend request sent successfully']);
     }
-    public function accept($userIdFrom, $userIdTo)
+
+    public function accept(Request $request)
     {
-        $contact = Contact::where([
-            'user_id_from' => $userIdFrom,
-            'user_id_to' => $userIdTo,
-        ])->first();
+        $contactId = $request->input('contactId');
+
+        $contact = Contact::where('id', $contactId)->with('userFrom', 'userTo')->first();
 
         if (!$contact) {
             return redirect()->back()->with('error', 'Контакт не найден');
@@ -77,11 +87,10 @@ class ContactController extends Controller
         return redirect()->back()->with('success', 'Контакт добавлен');
     }
 
-    public function delete($userIdFrom, $userIdTo){
-        $contact = Contact::where([
-            'user_id_from' => $userIdFrom,
-            'user_id_to' => $userIdTo,
-        ])->first();
+    public function delete(Request $request)
+    {
+        $contactId = $request->input('contactId');
+        $contact = Contact::where('id', $contactId)->with('userFrom', 'userTo')->first();
 
         if (!$contact) {
             return redirect()->back()->with('error', 'Контакт не найден');
