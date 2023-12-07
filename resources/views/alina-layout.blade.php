@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{{ asset('css/setka.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 </head>
     <body>
@@ -18,6 +20,6 @@
             @yield('main_content')
         </div>
         <script src={{ asset('js/script.js') }}></script>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     </body>
 </html>

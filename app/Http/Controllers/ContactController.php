@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactsMessage;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\User;
@@ -100,21 +101,58 @@ class ContactController extends Controller
 
         return redirect()->back()->with('success', 'Контакт убран');
     }
-    public function chat($contactId, $activeUserId){
-        $activeUser = User::findOrFail($activeUserId);
+    public function chat(){
+        $activeUser = Auth::user();
+        $activeUserId = $activeUser->id;
 
-        $contact = Contact::findOrFail($contactId)->load('userFrom', 'userTo');
-        $contact->messages;
+        $allAcceptedContacts = Contact::where(function($query) use ($activeUserId) {
+            $query->where('user_id_to', $activeUserId)
+                  ->orWhere('user_id_from', $activeUserId);
+        })
+        ->where('status', 'accepted')
+        ->with('messages', 'userFrom', 'userTo')
+        ->get();
 
-        $otherUser = "";
-        if($contact->user_id_from == $activeUser->id) {
-            $otherUser = $contact->userTo;
-        } else {
-            $otherUser = $contact->userFrom;
+        foreach ($allAcceptedContacts as $contact) {
+            // Теперь у каждого контакта есть загруженные сообщения
+            $messages = $contact->messages;
+            $lastMessage = $messages->last();
+
+            $contact->friend = $contact->user_id_from == $activeUserId ? $contact->userTo : $contact->userFrom;
+
+            $newMessage = new ContactsMessage();
+            $newMessage->content = 'Новое сообщение';
+
+            $contact->lastMessage = $lastMessage;
+
         }
 
-        // return $contact;
-        return view('contacts.chat', compact('contact', 'activeUser', "otherUser"));
+        return view('users.chat', compact('allAcceptedContacts', 'activeUser'));
+    }
+    public function showActiveChat($contactId){
+        $activeUser = Auth::user();
+        $activeUserId = $activeUser->id;
+
+        $contact = Contact::findOrFail($contactId);
+
+        $contact->messages;
+        $contact->friend = $contact->user_id_from == $activeUserId ? $contact->userTo : $contact->userFrom;
+        $contact->activeUser = $activeUser;
+
+        return response()->json(['contact' => $contact]);
+        // return response()->json(['messages' => $messages]);
+        // $contact = Contact::findOrFail($contactId)->load('userFrom', 'userTo');
+        // $contact->messages;
+
+        // $otherUser = "";
+        // if($contact->user_id_from == $activeUser->id) {
+        //     $otherUser = $contact->userTo;
+        // } else {
+        //     $otherUser = $contact->userFrom;
+        // }
+
+        // // return $contact;
+        // return view('users.chat', compact('contact', 'activeUser', "otherUser"));
 
     }
 }
