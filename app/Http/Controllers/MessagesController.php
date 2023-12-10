@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContactsMessage;
 use Illuminate\Http\Request;
 use App\Models\Message;
+use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
@@ -27,11 +28,12 @@ class MessagesController extends Controller
 
         return redirect()->back();
     }
-    public function sendContactMessage(Request $request,$activeUserId)
+    public function sendContactMessage(Request $request)
     {
-    // Ваш код для сохранения сообщения в базе данных
+        $content = $request->input('content');
+        $contactId = $request->input('contact_id'); // изменено имя переменной
 
-        $content = $request->input('message');
+        $activeUser = Auth::user();
 
         if($content == null) {
             $message = "Сообщение не может быть пустым";
@@ -39,10 +41,10 @@ class MessagesController extends Controller
         }
 
         $contactsMessage = new ContactsMessage();
-        $contactsMessage->content = $request->input('message');
-        $contactsMessage->contact_Id = $request->input('contactId');
-        // Добавьте user_id, если у вас есть отношение "один ко многим" с таблицей пользователей
-        $contactsMessage->user_id = $activeUserId; // предполагается, что у вас есть аутентифицированный пользователь
+        $contactsMessage->content = $content;
+        $contactsMessage->contact_Id = $contactId;
+        $contactsMessage->user_id = $activeUser->id;
+
         $contactsMessage->save();
 
         return redirect()->back();

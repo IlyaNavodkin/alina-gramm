@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/chat', [\App\Http\Controllers\ContactController::class, 'chat'])->name('chat');
     Route::get('/chat/{contactId}', [\App\Http\Controllers\ContactController::class, 'showActiveChat'])->name('showActiveChat');
+    Route::post('/chat/send/', [\App\Http\Controllers\MessagesController::class, 'sendContactMessage'])->name('sendContactMessage');
 
     Route::get('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/users/profile/{id}', [\App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');

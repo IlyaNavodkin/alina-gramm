@@ -14,7 +14,7 @@
             </a>
             <ul class="chat-sidebar-menu">
                 <li><a href="{{ route('chat') }}" data-title="Chats"><i class="ri-chat-3-line"></i></a></li>
-                <li class="active"><a href="contacts.html" data-title="Contacts"><i class="ri-contacts-line"></i></a></li>
+                <li class="active"><a href=# data-title="Contacts"><i class="ri-contacts-line"></i></a></li>
 
                 <li class="chat-sidebar-profile">
                     <button type="button" class="chat-sidebar-profile-toggle">

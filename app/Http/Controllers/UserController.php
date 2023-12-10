@@ -108,58 +108,6 @@ class UserController extends Controller
         }
     }
 
-    // public function tryAuth(Request $request){
-
-    //     $email = $request->input('email');
-    //     $password = $request->input('password');
-
-    //     $user = User::where('email', $email)->first();
-    //     if(!$user){
-    //         return "Пользователь не найден";
-    //         // return redirect()->back()->with('error', 'Пользователь не найден');
-    //     }
-
-    //     if($password != $user->password){
-    //         return "Неверный пароль";
-    //         // return redirect()->back()->with('error', 'Неверный пароль');
-    //     }
-
-    //     $id = $user->id;
-    //     // Получаем активного пользователя с его чатами
-    //     $activeUser = User::with('chats')->findOrFail($id);
-
-    //     // $pendingContacts = Contact::where('user_id_to', $id)->where('status', 'pending')->with('userTo')->get();
-    //     $commingContacts = Contact::where('user_id_from', $id)->where('status', 'pending')->with('userFrom')->get();
-    //     // $acceptedContacts = Contact::where('status', 'accepted')->where('user_id_to', $id)
-    //     // ->orWhere('user_id_from', $id)
-    //     // ->with('userTo')
-    //     // ->get();
-
-    //     $acceptedContacts = Contact::where('status', 'accepted')
-    //     ->where(function ($query) use ($id)
-    //     {
-    //         $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
-    //     })
-    //     ->with('userTo')
-    //     ->with('userFrom')
-    //     ->get();
-
-    //     $pendingContacts = Contact::where('status', 'pending')
-    //     ->where('user_id_to', $id)->with('userTo')->get();
-
-    //     // Получаем все чаты
-    //     $allChats = Chat::all();
-
-    //     // Коллекция с чатами, в которых пользователь не участвует
-    //     $notUsedChats = $allChats->reject(function ($chat) use ($activeUser) {
-    //         return $activeUser->chats->contains('id', $chat->id);
-    //     });
-    //     $nulll = $commingContacts->count();
-    //     // return view('users.info', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
-    //     return view('users.my-contacts', compact('activeUser', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
-    //     // return view('users.my-contacts', ['id' => $user->id]);
-    // }
-
     public function delete($id)
     {
         $userForDelete=User::query()->where('id', $id)->delete();
