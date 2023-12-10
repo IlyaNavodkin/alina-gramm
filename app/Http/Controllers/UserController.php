@@ -10,8 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function dashboard()
+    public function dashboard($activeDialogId = null)
     {
+        $activeDialog = null;
+
+        if ($activeDialogId) {
+            $activeDialog = Chat::find($activeDialogId);
+        }
+
         $activeUser = Auth::user();
         $id = $activeUser->id;
 
@@ -39,9 +45,8 @@ class UserController extends Controller
 
         $avatarPath = asset( $activeUser->avatar);
 
-
         return view('users.my-contacts', compact('activeUser', 'pendingContacts',
-        'acceptedContacts', 'commingContacts', 'avatarPath'));
+        'acceptedContacts', 'commingContacts', 'avatarPath', 'activeDialog'));
         // return Auth::user();
     }
 

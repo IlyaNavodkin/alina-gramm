@@ -6,6 +6,7 @@ use App\Models\ContactsMessage;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Contact;
 
 class MessagesController extends Controller
 {
@@ -15,27 +16,19 @@ class MessagesController extends Controller
         return view('admin-panel.messages.getAll', ['messages' => $messages]);
     }
 
-    public function send(Request $request, $chatId, $userId)
-    {
-    // Ваш код для сохранения сообщения в базе данных
 
-        $message = new Message();
-        $message->content = $request->input('message');
-        $message->chat_id = $chatId;
-        // Добавьте user_id, если у вас есть отношение "один ко многим" с таблицей пользователей
-        $message->user_id = $userId; // предполагается, что у вас есть аутентифицированный пользователь
-        $message->save();
-
-        return redirect()->back();
-    }
     public function sendContactMessage(Request $request)
     {
-        $content = $request->input('content');
+
+        $content = $request->input('message');
         $contactId = $request->input('contact_id'); // изменено имя переменной
+        $activeDialog = Contact::find($contactId)->load('userFrom', 'userTo', 'messages');
 
         $activeUser = Auth::user();
 
         if($content == null) {
+            dd($request->all());
+
             $message = "Сообщение не может быть пустым";
             return redirect()->back()->with('error', $message);
         }
@@ -47,6 +40,7 @@ class MessagesController extends Controller
 
         $contactsMessage->save();
 
+        // return view('include.chats.conversation', compact('activeDialog'));
         return redirect()->back();
     }
 

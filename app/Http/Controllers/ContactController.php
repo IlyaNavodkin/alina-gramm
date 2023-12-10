@@ -15,6 +15,22 @@ class ContactController extends Controller
         $contacts = Contact::all();
         return view('contacts.index', compact('contacts'));
     }
+
+    public function getById($contactId){
+
+
+        $activeDialog = Contact::find($contactId)->load('userFrom', 'userTo', 'messages');
+
+        // Проверяем, найдена ли запись
+        if (!$activeDialog) {
+            return response()->json(['error' => 'Contact not found'], 404);
+        }
+
+
+        // Далее ваш код обработки, если запись найдена
+        return view('include.chats.conversation', compact('activeDialog'));
+    }
+
     public function create( Request $request)
     {
         $activeUser = Auth::user();
@@ -127,8 +143,11 @@ class ContactController extends Controller
 
         }
 
-        return view('users.chat', compact('allAcceptedContacts', 'activeUser'));
+        $activeDialog = null;
+
+        return view('users.chat', compact('allAcceptedContacts', 'activeUser', 'activeDialog'));
     }
+
     public function showActiveChat($contactId){
         $activeUser = Auth::user();
         $activeUserId = $activeUser->id;

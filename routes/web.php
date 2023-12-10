@@ -32,7 +32,7 @@ Route::post('/auth/login', [\App\Http\Controllers\AuthController::class, 'login'
 Route::post('/auth/register', [\App\Http\Controllers\AuthController::class, 'register'])->name('auth.register');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/{activeDialogId?}', [\App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/chat', [\App\Http\Controllers\ContactController::class, 'chat'])->name('chat');
     Route::get('/chat/{contactId}', [\App\Http\Controllers\ContactController::class, 'showActiveChat'])->name('showActiveChat');
     Route::post('/chat/send/', [\App\Http\Controllers\MessagesController::class, 'sendContactMessage'])->name('sendContactMessage');
@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/contacts/create', [\App\Http\Controllers\ContactController::class, 'create'])->name('contacts.create');
     Route::post('/contacts/accept', [\App\Http\Controllers\ContactController::class, 'accept'])->name('contacts.accept');
     Route::post('/contacts/delete', [\App\Http\Controllers\ContactController::class, 'delete'])->name('contacts.delete');
+    Route::get('/contacts/getById/{contactId}', [\App\Http\Controllers\ContactController::class, 'getById'])->name('contacts.getById');
 
 });
 
