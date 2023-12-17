@@ -9,33 +9,18 @@
             <li class="content-message-title"><span>Недавнее</span></li>
 
 
-            @if ($allAcceptedContacts->count() == 0)
-                <li>
-                    <a href="#" data-conversation="#conversation-1">
-                        <img class="content-message-image" src="assets/img/boy.gif" alt="">
-                        <span class="content-message-info">
-                            <span class="content-message-name">ТЕСТ</span>
-                            <span class="content-message-text">ТЕСТ?</span>
-                        </span>
-                        <span class="content-message-more">
-                            <span class="content-message-unread">3</span>
-                            <span class="content-message-time">10:00</span>
-                        </span>
-                    </a>
-                </li>
-
-            @endif
             @foreach ($allAcceptedContacts as $contact)
-            <li>
-                <a href="#" class="load-messages" data-contact-id="{{ $contact->id }}" onclick="refreshConversation('{{ $contact->id }}')">
-                    <img class="content-message-image" src="{{ $contact->friend->avatar }}" alt="">
+            <li data-login = "{{ $contact->friend->login }}" id = "friend-list-element-{{ $contact->friend->login }}">
+                <a href="{{ route('chat', ['activeContactId' => $contact->id]) }}" class="load-messages" data-contact-id="{{ $contact->id }}">
+                    <img class="content-message-image" src={{ asset($contact->friend->avatar) }} alt="">
                     <span class="content-message-info">
                         <span class="content-message-name">{{ $contact->friend->login }}</span>
                         <span class="content-message-text">
                             {{ $contact->lastMessage ? $contact->lastMessage->content : 'Нет сообщения' }}
-                        </span>                                <span class="content-message-more">
-                        <span class="content-message-unread">3</span>
-                        <span class="content-message-time">10:00</span>
+                        </span>
+                        <span class="content-message-more">
+                        {{-- <span class="content-message-unread">3</span> --}}
+                        <span class="content-message-time"> {{ $contact->lastMessage ? $contact->lastMessage->created_at : '' }}</span>
                     </span>
                 </a>
             </li>

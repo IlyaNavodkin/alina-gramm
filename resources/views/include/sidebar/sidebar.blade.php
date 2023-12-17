@@ -12,7 +12,7 @@
 
         <li class="chat-sidebar-profile">
             <button type="button" class="chat-sidebar-profile-toggle">
-                <img src={{$activeUser->avatar}} alt="">
+                <img src={{ asset($activeUser->avatar) }} alt="">
             </button>
             <ul class="chat-sidebar-profile-dropdown">
                 <li><a href="#" id="open-modal"><i class="ri-user-line"></i>Профиль</a></li>

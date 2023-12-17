@@ -32,7 +32,14 @@ class UserController extends Controller
         ->with('userFrom')
         ->get();
 
+
+
+        $pendingContacts = Contact::where('status', 'pending')
+        ->where('user_id_to', $id)->with('userTo')->get();
+
+
         foreach ($acceptedContacts as $contact) {
+
             if ($contact->user_id_from == $id) {
                 $contact->friend = $contact->userTo;
             } else {
@@ -40,41 +47,64 @@ class UserController extends Controller
             }
         }
 
-        $pendingContacts = Contact::where('status', 'pending')
-        ->where('user_id_to', $id)->with('userTo')->get();
+        foreach ($pendingContacts as $contact) {
+
+            if ($contact->user_id_from == $id) {
+                $contact->friend = $contact->userTo;
+            } else {
+                $contact->friend = $contact->userFrom;
+            }
+        }
+
+        foreach ($commingContacts as $contact) {
+
+            if ($contact->user_id_from == $id) {
+                $contact->friend = $contact->userTo;
+            } else {
+                $contact->friend = $contact->userFrom;
+            }
+        }
 
         $avatarPath = asset( $activeUser->avatar);
+        $findestUsers = [];
 
         return view('users.my-contacts', compact('activeUser', 'pendingContacts',
-        'acceptedContacts', 'commingContacts', 'avatarPath', 'activeDialog'));
+        'acceptedContacts', 'commingContacts', 'avatarPath', 'activeDialog',  'findestUsers'));
         // return Auth::user();
     }
 
 
-    public function findByLogin(Request $request){
+    public function findByLogin(Request $request)
+    {
         $activeUser = Auth::user();
-
         $login = $request->input('login');
-        $users = User::where('login', 'LIKE', "%$login%")->with('contacts')->get();
+        $id = $activeUser->id;
 
-        $unknowUsers = [];
-        foreach ($users as $user) {
-            if ($user->id == $activeUser->id) {
-                continue;
-            }
+        // Находим все контакты активного пользователя
+        $acceptedContacts = Contact::where('status', 'accepted')
+            ->where(function ($query) use ($id) {
+                $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
+            })
+            ->with('userTo')
+            ->with('userFrom')
+            ->get();
 
-            $contacts = $user->contacts;
-
-            foreach ($contacts as $contact) {
-                if ($contact->id == $activeUser->id || $contact->user_id_to == $activeUser->id) {
-                    continue;
-                }
-            }
-
-            $unknowUsers[] = $user;
+        // Получаем id всех пользователей, связанных с активным пользователем через контакты
+        $relatedUserIds = [];
+        foreach ($acceptedContacts as $contact) {
+            $relatedUserIds[] = $contact->user_id_from;
+            $relatedUserIds[] = $contact->user_id_to;
         }
 
-        return response()->json(['users' => $unknowUsers]);
+        // Убираем дубликаты id пользователей
+        $relatedUserIds = array_unique($relatedUserIds);
+
+        // Находим всех пользователей, у которых логин подходит под условие и которых еще нет в контактах
+        $unknownUsers = User::where('login', 'LIKE', "%$login%")
+            ->whereNotIn('id', $relatedUserIds)
+            ->get();
+
+        return view('include.contacts.find-users.find-user-result', ['users' => $unknownUsers]);
     }
 
     public function getAll(){

@@ -10,27 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
 {
-    public function index()
-    {
-        $contacts = Contact::all();
-        return view('contacts.index', compact('contacts'));
-    }
-
-    public function getById($contactId){
-
-
-        $activeDialog = Contact::find($contactId)->load('userFrom', 'userTo', 'messages');
-
-        // Проверяем, найдена ли запись
-        if (!$activeDialog) {
-            return response()->json(['error' => 'Contact not found'], 404);
-        }
-
-
-        // Далее ваш код обработки, если запись найдена
-        return view('include.chats.conversation', compact('activeDialog'));
-    }
-
     public function create( Request $request)
     {
         $activeUser = Auth::user();
@@ -85,9 +64,8 @@ class ContactController extends Controller
 
         $contact->save();
 
-        return response()->json(['message' => 'Friend request sent successfully']);
+        return  redirect()->back()->with('success', 'Контакт добавлен');
     }
-
     public function accept(Request $request)
     {
         $contactId = $request->input('contactId');
@@ -103,7 +81,6 @@ class ContactController extends Controller
 
         return redirect()->back()->with('success', 'Контакт добавлен');
     }
-
     public function delete(Request $request)
     {
         $contactId = $request->input('contactId');
@@ -117,7 +94,7 @@ class ContactController extends Controller
 
         return redirect()->back()->with('success', 'Контакт убран');
     }
-    public function chat(){
+    public function chat($activeContactId = null){
         $activeUser = Auth::user();
         $activeUserId = $activeUser->id;
 
@@ -130,7 +107,6 @@ class ContactController extends Controller
         ->get();
 
         foreach ($allAcceptedContacts as $contact) {
-            // Теперь у каждого контакта есть загруженные сообщения
             $messages = $contact->messages;
             $lastMessage = $messages->last();
 
@@ -143,35 +119,28 @@ class ContactController extends Controller
 
         }
 
-        $activeDialog = null;
+        $activeDialog = Contact::find($activeContactId);
+        if($activeDialog){
+            // dd($activeDialog);
+
+            $activeDialog->load('userFrom', 'userTo', 'messages');
+
+            if (!$activeDialog) {
+                return response()->json(['error' => 'Contact not found'], 404);
+            }
+
+            if(Auth::user()->id != $activeDialog->userFrom->id){
+                $friend = $activeDialog->userFrom;
+            }
+            if(Auth::user()->id != $activeDialog->userTo->id){
+                $friend = $activeDialog->userTo;
+            }
+
+            $activeDialog->friend = $friend;
+
+            // dd($activeDialog);
+        }
 
         return view('users.chat', compact('allAcceptedContacts', 'activeUser', 'activeDialog'));
-    }
-
-    public function showActiveChat($contactId){
-        $activeUser = Auth::user();
-        $activeUserId = $activeUser->id;
-
-        $contact = Contact::findOrFail($contactId);
-
-        $contact->messages;
-        $contact->friend = $contact->user_id_from == $activeUserId ? $contact->userTo : $contact->userFrom;
-        $contact->activeUser = $activeUser;
-
-        return response()->json(['contact' => $contact]);
-        // return response()->json(['messages' => $messages]);
-        // $contact = Contact::findOrFail($contactId)->load('userFrom', 'userTo');
-        // $contact->messages;
-
-        // $otherUser = "";
-        // if($contact->user_id_from == $activeUser->id) {
-        //     $otherUser = $contact->userTo;
-        // } else {
-        //     $otherUser = $contact->userFrom;
-        // }
-
-        // // return $contact;
-        // return view('users.chat', compact('contact', 'activeUser', "otherUser"));
-
     }
 }

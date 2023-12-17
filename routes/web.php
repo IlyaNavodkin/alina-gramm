@@ -33,8 +33,8 @@ Route::post('/auth/register', [\App\Http\Controllers\AuthController::class, 'reg
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/{activeDialogId?}', [\App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/chat', [\App\Http\Controllers\ContactController::class, 'chat'])->name('chat');
-    Route::get('/chat/{contactId}', [\App\Http\Controllers\ContactController::class, 'showActiveChat'])->name('showActiveChat');
+    Route::get('/chat/{activeContactId?}/', [\App\Http\Controllers\ContactController::class, 'chat'])->name('chat');
+    // Route::get('/chat/{contactId}', [\App\Http\Controllers\ContactController::class, 'showActiveChat'])->name('showActiveChat');
     Route::post('/chat/send/', [\App\Http\Controllers\MessagesController::class, 'sendContactMessage'])->name('sendContactMessage');
 
     Route::get('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');

@@ -3,8 +3,9 @@
     <div class="conversation-user">
 
         <div>
-            <div class="conversation-user-name">{{ $activeDialog->userTo->login }}</div>
-            <div class="conversation-user-status online">online</div>
+            <img class="content-message-image" src={{ asset($activeDialog->friend->avatar) }} alt="">
+            <div class="conversation-user-name">{{ $activeDialog->friend->login }}</div>
+            {{-- <div class="conversation-user-status online" id="chat-friend-top-status">online</div> --}}
         </div>
     </div>
     <div class="conversation-buttons">
