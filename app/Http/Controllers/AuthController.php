@@ -27,9 +27,8 @@ class AuthController extends Controller
             return redirect()->intended('/dashboard');
         }
 
-        return back()->withErrors([
-            'notPass' => 'Пользователя с такими данными не существует.',
-        ]);
+        $message = "Пользователь с такими данными не зарегистрирован";
+        return redirect()->back()->with('Error', $message);
     }
 
     public function showRegistrationForm()

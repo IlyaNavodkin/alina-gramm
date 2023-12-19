@@ -25,9 +25,4 @@ class ContactsMessage extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function replyTo()
-    {
-        return $this->belongsTo(Message::class, 'reply_message_id');
-    }
 }

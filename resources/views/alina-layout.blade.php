@@ -10,15 +10,32 @@
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/setka.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     {{-- <script src={{ asset('js/script.js') }}></script> --}}
-    <script src={{ asset('js/chats.js') }}></script>
+    <script src={{ asset('js/chat.js') }}></script>
+    <script src={{ asset('js/contact-menu.js') }}></script>
+    <script src={{ asset('js/sidebar.js') }}></script>
 
 
 </head>
     <body>
         <div>
+            @if(session('success'))
+            <div>
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
             @yield('main_content')
         </div>
 

@@ -28,16 +28,6 @@ class User extends AuthenticatableUser implements Authenticatable
     protected $casts = [
         'banned' => 'boolean',
     ];
-    public function chats()
-    {
-        // return $this->hasMany(Chat::class, 'owner_id');
-        return $this->belongsToMany(Chat::class);
-    }
-
-    public function messages()
-    {
-        return $this->hasMany(Message::class);
-    }
 
     public function contacts()
     {

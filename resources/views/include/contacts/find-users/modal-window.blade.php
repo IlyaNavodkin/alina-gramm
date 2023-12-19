@@ -14,9 +14,7 @@
         <div class="search-result">
             <div class="content-messages-list">
                 <div class="search-divider"><span>Результаты поиска</span></div>
-
-                {{-- @include('include\contacts\find-users\find-user-result') --}}
-                @include('include.contacts.find-users.find-user-result', ['users' => $findestUsers])
+                <ul id="searchResults"></ul>
             </div>
         </div>
     </div>

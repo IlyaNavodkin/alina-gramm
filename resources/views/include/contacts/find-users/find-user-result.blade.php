@@ -1,4 +1,7 @@
-<ul>
+
+@if(count($users) == 0)
+    <li>Пользователи не найдены</li>
+@else
     @foreach ($users as $user)
         <li>
             <a href="#">
@@ -10,4 +13,5 @@
             </a>
         </li>
     @endforeach
-</ul>
+@endif
+

@@ -1,3 +1,5 @@
+@include('include\sidebar\sidebar-profile-modal') {{-- Сайдбар модальное окно --}}
+
 <aside class="chat-sidebar">
     <a href="#" class="chat-sidebar-logo">
         <img src={{ asset('img/chat-logo-sidebar.png') }} class="logo"></img>

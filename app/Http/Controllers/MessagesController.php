@@ -10,27 +10,17 @@ use App\Models\Contact;
 
 class MessagesController extends Controller
 {
-    public function getAll(){
-        $messages = Message::with('user', 'chat')->get();
-
-        return view('admin-panel.messages.getAll', ['messages' => $messages]);
-    }
-
-
     public function sendContactMessage(Request $request)
     {
-
         $content = $request->input('message');
-        $contactId = $request->input('contact_id'); // изменено имя переменной
+        $contactId = $request->input('contact_id');
         $activeDialog = Contact::find($contactId)->load('userFrom', 'userTo', 'messages');
 
         $activeUser = Auth::user();
 
         if($content == null) {
-            dd($request->all());
-
             $message = "Сообщение не может быть пустым";
-            return redirect()->back()->with('error', $message);
+            return redirect()->back()->with('Error', $message);
         }
 
         $contactsMessage = new ContactsMessage();
@@ -40,11 +30,8 @@ class MessagesController extends Controller
 
         $contactsMessage->save();
 
-        // return view('include.chats.conversation', compact('activeDialog'));
         return redirect()->back();
     }
-
-
     public function delete(Request $request)
     {
         $messageId = $request->input('messageId');

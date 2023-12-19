@@ -14,10 +14,6 @@ class UserController extends Controller
     {
         $activeDialog = null;
 
-        if ($activeDialogId) {
-            $activeDialog = Chat::find($activeDialogId);
-        }
-
         $activeUser = Auth::user();
         $id = $activeUser->id;
 
@@ -70,7 +66,6 @@ class UserController extends Controller
 
         return view('users.my-contacts', compact('activeUser', 'pendingContacts',
         'acceptedContacts', 'commingContacts', 'avatarPath', 'activeDialog',  'findestUsers'));
-        // return Auth::user();
     }
 
 
@@ -80,7 +75,6 @@ class UserController extends Controller
         $login = $request->input('login');
         $id = $activeUser->id;
 
-        // Находим все контакты активного пользователя
         $acceptedContacts = Contact::where('status', 'accepted')
             ->where(function ($query) use ($id) {
                 $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
@@ -107,102 +101,14 @@ class UserController extends Controller
         return view('include.contacts.find-users.find-user-result', ['users' => $unknownUsers]);
     }
 
-    public function getAll(){
-        $users = new User();
+    public function delete (){
+        $userId = Auth::user()->id;
 
-        return view('admin-panel.users.user-list', ['users' => $users->all()]);
+        $user = User::find($userId);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Пользователь удален');
     }
-
-    public function register(){
-        return view('users.singup');
-    }
-
-    public function login(){
-        return view('users.login');
-    }
-
-    public function tryAuth(Request $request){
-
-        $email = $request->input('email');
-        $password = $request->input('password');
-
-        // Хешируем введенный пароль
-        $hashedPassword = bcrypt($password);
-
-        // Пытаемся аутентифицировать пользователя с хешированным паролем
-        $isPass = Auth::attempt(['email' => $email, 'password' => $hashedPassword]);
-
-        // Попытка аутентификации
-        if ($isPass) {
-            // Аутентификация успешна
-            $request->session()->regenerate();
-            return view('users.my-contacts');
-        } else {
-            // Неверные учетные данные
-            return "Неверные учетные данные";
-        }
-    }
-
-    public function delete($id)
-    {
-        $userForDelete=User::query()->where('id', $id)->delete();
-
-        return redirect()->back()->with('success', 'Пользователь создан');
-    }
-
-    public function chats($id)
-    {
-        // Получаем активного пользователя с его чатами
-        $activeUser = User::with('chats')->findOrFail($id);
-
-        // $pendingContacts = Contact::where('user_id_to', $id)->where('status', 'pending')->with('userTo')->get();
-        $commingContacts = Contact::where('user_id_from', $id)->where('status', 'pending')->with('userFrom')->get();
-        // $acceptedContacts = Contact::where('status', 'accepted')->where('user_id_to', $id)
-        // ->orWhere('user_id_from', $id)
-        // ->with('userTo')
-        // ->get();
-
-        $acceptedContacts = Contact::where('status', 'accepted')
-        ->where(function ($query) use ($id)
-        {
-            $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
-        })
-        ->with('userTo')
-        ->with('userFrom')
-        ->get();
-
-        $pendingContacts = Contact::where('status', 'pending')
-        ->where('user_id_to', $id)->with('userTo')->get();
-
-        // Получаем все чаты
-        $allChats = Chat::all();
-
-        // Коллекция с чатами, в которых пользователь не участвует
-        $notUsedChats = $allChats->reject(function ($chat) use ($activeUser) {
-            return $activeUser->chats->contains('id', $chat->id);
-        });
-
-        // return view('users.info', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
-        return view('users.my-contacts', compact('activeUser', 'notUsedChats', 'pendingContacts', 'acceptedContacts', 'commingContacts'));
-
-        // return $activeUser;
-    }
-
-
-    function filterList($list1, $list2) {
-        $filtered = array_filter($list1, function ($item1) use ($list2) {
-            // Проверяем, есть ли элемент с таким же Id во втором списке
-            foreach ($list2 as $item2) {
-                if ($item1->id === $item2->id) {
-                    return false; // Элемент найден, не включаем его в результат
-                }
-            }
-            return true; // Элемент не найден, включаем его в результат
-        });
-
-        return $filtered;
-    }
-
 
     public function edit(Request $request)
     {
@@ -224,12 +130,12 @@ class UserController extends Controller
             ],
         ]);
 
+
         $email = $request->input('email');
         $phone = $request->input('phone');
         $login = $request->input('login');
         $id = $request->input('id');
 
-        // Проверка уникальности логина, email и телефона в базе данных
         $loginExists = User::where('login',  $login)
             ->where('id', '!=', $id)
             ->exists();
@@ -300,11 +206,5 @@ class UserController extends Controller
         $image->move($relateAvatarFolderPath, $imageName);
 
         return back()->with('success', 'Аватар пользователя успешно загружен.');
-    }
-
-    public function getUserContacts(User $user)
-    {
-        $contacts = $user->contacts;
-        return view('users.contacts', compact('user', 'contacts'));
     }
 }

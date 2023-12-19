@@ -32,21 +32,6 @@
                             <span class="profile-item" contenteditable="true">{{$activeUser->phone}}</span> --}}
 
 
-                            @if($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach($errors->all() as $error)
-                                        <li>{{$error}}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
-                            @if(session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                            @endif
-
                             <form method="post" action="/users/edit">
                                 @csrf
 
@@ -77,10 +62,14 @@
                                 </span>
                                 <span class="but">
 
-                                <a type="submit" class="delete-account" >Удалить аккаунт</a>
                                 <button type="submit" class="submit-changes">Сохранить изменения</button>
 
                             </form>
+                            <form method="get" action="/profile/delete">
+                                @csrf
+                                <button type="submit" id="delete-account-btn" class="delete-account" >Удалить аккаунт</button>
+                            </form>
+
                         </span>
                     </ul>
                 </li>
