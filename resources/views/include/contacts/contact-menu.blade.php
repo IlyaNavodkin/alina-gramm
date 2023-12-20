@@ -7,7 +7,7 @@
     <!-- Поиск пользователя для добавления -->
     <button id="open-modal-btn" class="add-new-friend">Добавить друга</button>
 
-        @include('include\contacts\find-users\modal-window') {{-- Модальное окно поиска контактов --}}
+        @include('include.contacts.find-users.modal-window') {{-- Модальное окно поиска контактов --}}
 
         <!-- second modal wiindow  -->
 

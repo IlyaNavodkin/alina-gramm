@@ -8,11 +8,11 @@
 <section class="chat-section">
     <div class="chat-container">
 
-        @include('include\sidebar\sidebar') {{-- Сайдбар --}}
+        @include('include.sidebar.sidebar') {{-- Сайдбар --}}
 
         <div class="chat-content">
 
-            @include('include\contacts\contact-menu') {{-- Контакты --}}
+            @include('include.contacts.contact-menu') {{-- Контакты --}}
 
             <!-- диалоговое окно дефолт -->
             <div class="conversation conversation-default active">
