@@ -5,21 +5,6 @@
 
 @section('main_content')
 
-
-@if(session('success'))
-<div>
-    {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
-@if(session('errors'))
-<div>
-    {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
 <section class="chat-section">
     <div class="chat-container">
 

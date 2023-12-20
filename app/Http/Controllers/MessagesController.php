@@ -13,7 +13,7 @@ class MessagesController extends Controller
     public function sendContactMessage(Request $request)
     {
         $content = $request->input('message');
-        $contactId = $request->input('contact_id');
+        $contactId = $request->input('contact_id'); 
         $activeDialog = Contact::find($contactId)->load('userFrom', 'userTo', 'messages');
 
         $activeUser = Auth::user();

@@ -14,6 +14,11 @@ class AuthController extends Controller
         return view('users.login');
     }
 
+    public function showRegistrationForm()
+    {
+        return view('users.singup');
+    }
+    
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -31,10 +36,6 @@ class AuthController extends Controller
         return redirect()->back()->with('Error', $message);
     }
 
-    public function showRegistrationForm()
-    {
-        return view('users.singup');
-    }
 
     public function register(Request $request)
     {

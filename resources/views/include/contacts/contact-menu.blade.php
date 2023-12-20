@@ -11,7 +11,6 @@
 
         <!-- second modal wiindow  -->
 
-        @include('include\sidebar\sidebar-profile-modal') {{-- Сайдбар модальное окно --}}
 
         <!-- конец поиска -->
 

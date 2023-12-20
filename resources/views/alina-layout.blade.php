@@ -14,7 +14,6 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    {{-- <script src={{ asset('js/script.js') }}></script> --}}
     <script src={{ asset('js/chat.js') }}></script>
     <script src={{ asset('js/contact-menu.js') }}></script>
     <script src={{ asset('js/sidebar.js') }}></script>

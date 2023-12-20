@@ -121,7 +121,6 @@ class ContactController extends Controller
 
         $activeDialog = Contact::find($activeContactId);
         if($activeDialog){
-            // dd($activeDialog);
 
             $activeDialog->load('userFrom', 'userTo', 'messages');
 
@@ -137,8 +136,6 @@ class ContactController extends Controller
             }
 
             $activeDialog->friend = $friend;
-
-            // dd($activeDialog);
         }
 
         return view('users.chat', compact('allAcceptedContacts', 'activeUser', 'activeDialog'));

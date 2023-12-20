@@ -38,21 +38,3 @@ $(document).ready(function () {
         });
     });
 });
-
-function deleteProfile() {
-    $.ajax({
-        url: "/profile/delete",
-        type: "DELETE",
-        data: {
-            _token: $('meta[name="csrf-token"]').attr("content"),
-            login: login,
-        },
-        success: function (data) {
-            console.log(data.message);
-            location.reload();
-        },
-        error: function (error) {
-            console.error("Ошибка при выполнении запроса", error);
-        },
-    });
-}
