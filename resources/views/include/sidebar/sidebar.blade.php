@@ -1,4 +1,4 @@
-@include('include\sidebar\sidebar-profile-modal') {{-- Сайдбар модальное окно --}}
+@include('include.sidebar.sidebar-profile-modal') {{-- Сайдбар модальное окно --}}
 
 <aside class="chat-sidebar">
     <a href="#" class="chat-sidebar-logo">

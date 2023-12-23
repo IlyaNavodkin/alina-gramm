@@ -7,6 +7,9 @@ use App\Models\Chat;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -71,34 +74,35 @@ class UserController extends Controller
 
     public function findByLogin(Request $request)
     {
+        Log::info('Whatever you need to send to your log');
         $activeUser = Auth::user();
         $login = $request->input('login');
         $id = $activeUser->id;
 
         $acceptedContacts = Contact::where('status', 'accepted')
-            ->where(function ($query) use ($id) {
+            ->where(
+                function ($query) use ($id) {
                 $query->where('user_id_to', $id)->orWhere('user_id_from', $id);
             })
             ->with('userTo')
             ->with('userFrom')
             ->get();
 
-        // Получаем id всех пользователей, связанных с активным пользователем через контакты
-        $relatedUserIds = [];
+        $ignoredIds = [];
+
         foreach ($acceptedContacts as $contact) {
-            $relatedUserIds[] = $contact->user_id_from;
-            $relatedUserIds[] = $contact->user_id_to;
+            $ignoredIds[] = $contact->user_id_from;
+            $ignoredIds[] = $contact->user_id_to;
         }
 
-        // Убираем дубликаты id пользователей
-        $relatedUserIds = array_unique($relatedUserIds);
+        $ignoredIds = array_unique($ignoredIds);
 
-        // Находим всех пользователей, у которых логин подходит под условие и которых еще нет в контактах
         $unknownUsers = User::where('login', 'LIKE', "%$login%")
-            ->whereNotIn('id', $relatedUserIds)
+            ->whereNotIn('id', $ignoredIds)
             ->get();
 
         return view('include.contacts.find-users.find-user-result', ['users' => $unknownUsers]);
+        // return response()->json($unknownUsers);
     }
 
     public function delete (){
@@ -112,23 +116,29 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {
-        $isValid = $request->validate([
-            'email' => [
-                'required',
-                'min:4',
-                'max:100',
-            ],
-            'phone' => [
-                'required',
-                'min:4',
-                'max:20',
-            ],
-            'login' => [
-                'required',
-                'min:4',
-                'max:50',
-            ],
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'min:4', 'max:100'],
+            'phone' => ['required', 'min:4', 'max:20'],
+            'login' => ['required', 'min:4', 'max:50'],
         ]);
+
+        // Настройка сообщений об ошибках на русском языке
+        $validator->messages()->add('email.required', 'Поле "Email" обязательно для заполнения.');
+        $validator->messages()->add('email.min', 'Минимальная длина поля "Email" - :min символа.');
+        $validator->messages()->add('email.max', 'Максимальная длина поля "Email" - :max символов.');
+
+        $validator->messages()->add('phone.required', 'Поле "Телефон" обязательно для заполнения.');
+        $validator->messages()->add('phone.min', 'Минимальная длина поля "Телефон" - :min символа.');
+        $validator->messages()->add('phone.max', 'Максимальная длина поля "Телефон" - :max символов.');
+
+        $validator->messages()->add('login.required', 'Поле "Логин" обязательно для заполнения.');
+        $validator->messages()->add('login.min', 'Минимальная длина поля "Логин" - :min символа.');
+        $validator->messages()->add('login.max', 'Максимальная длина поля "Логин" - :max символов.');
+
+        // Если валидация не проходит
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
 
         $email = $request->input('email');

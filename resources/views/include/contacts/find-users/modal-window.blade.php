@@ -7,7 +7,7 @@
 
         <form id="searchForm" class="content-sidebar-form">
             @csrf
-            <input type="search" id="login" name="login" class="content-sidebar-input" placeholder="Найти...">
+            <input type="search" id="search-login-input" name="login" class="content-sidebar-input" placeholder="Найти...">
             <button type="button" onclick="searchUsers()" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
         </form>
 

@@ -25,8 +25,8 @@ $(document).ready(function () {
 });
 
 function searchUsers() {
-    var login = $("#login").val();
-
+    var login = $("#search-login-input").val();
+    console.log(login);
     $.ajax({
         url: "/users/findByLogin",
         type: "POST",
@@ -35,6 +35,7 @@ function searchUsers() {
             login: login,
         },
         success: function (data) {
+            // const searchResults = data;
             $("#searchResults").html(data);
         },
         error: function (error) {

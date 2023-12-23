@@ -19,6 +19,7 @@
     <script src={{ asset('js/sidebar.js') }}></script>
 
 
+
 </head>
     <body>
         <div>
@@ -29,11 +30,14 @@
             </div>
             @endif
 
-            @if(session('error'))
-            <div>
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
             @yield('main_content')
         </div>

@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/users/edit', [\App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
     Route::post('/users/upload-image', [\App\Http\Controllers\UserController::class, 'uploadAvatar'])->name('users.uploadAvatar');
     Route::get('/profile/delete', [\App\Http\Controllers\UserController::class, 'delete'])->name('profile.delete');
+
+    Route::post('/messages/delete', [\App\Http\Controllers\MessagesController::class, 'delete'])->name('messages.delete');
 });
 
 

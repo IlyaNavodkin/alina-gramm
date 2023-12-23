@@ -7,7 +7,7 @@
 
         <div class="search-result">
             <ul class="profile-list">
-                <img class="profile-image" src={{$activeUser->avatar}} alt="">
+                <img class="profile-image" src={{ asset($activeUser->avatar) }} alt="">
                 <!-- Тут инпут на кнопке  -->
                 <div class="select-menu">
                     <form class="select-btn" action="{{ route('users.uploadAvatar') }}" method="post" enctype="multipart/form-data">

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -18,7 +19,7 @@ class AuthController extends Controller
     {
         return view('users.singup');
     }
-    
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -33,13 +34,13 @@ class AuthController extends Controller
         }
 
         $message = "Пользователь с такими данными не зарегистрирован";
-        return redirect()->back()->with('Error', $message);
+        return redirect()->back()->withErrors(['warning' => $message]);
     }
 
 
     public function register(Request $request)
     {
-        $isValid = $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => [
                 'required',
                 'min:4',
@@ -63,6 +64,28 @@ class AuthController extends Controller
                 'min:6',
             ],
         ]);
+
+        $validator->messages()->add('email.required', 'Поле "Email" обязательно для заполнения.');
+        $validator->messages()->add('email.min', 'Минимальная длина поля "Email" - :min символа.');
+        $validator->messages()->add('email.max', 'Максимальная длина поля "Email" - :max символов.');
+        $validator->messages()->add('email.unique', 'Пользователь с таким email уже существует.');
+
+        $validator->messages()->add('phone.required', 'Поле "Телефон" обязательно для заполнения.');
+        $validator->messages()->add('phone.min', 'Минимальная длина поля "Телефон" - :min символа.');
+        $validator->messages()->add('phone.max', 'Максимальная длина поля "Телефон" - :max символов.');
+        $validator->messages()->add('phone.unique', 'Пользователь с таким телефоном уже существует.');
+
+        $validator->messages()->add('login.required', 'Поле "Логин" обязательно для заполнения.');
+        $validator->messages()->add('login.min', 'Минимальная длина поля "Логин" - :min символа.');
+        $validator->messages()->add('login.max', 'Максимальная длина поля "Логин" - :max символов.');
+        $validator->messages()->add('login.unique', 'Пользователь с таким логином уже существует.');
+
+        $validator->messages()->add('password.required', 'Поле "Пароль" обязательно для заполнения.');
+        $validator->messages()->add('password.min', 'Минимальная длина пароля - :min символов.');
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
         $user = new User();
         $user->email = $request->input('email');
