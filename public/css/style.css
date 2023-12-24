@@ -895,7 +895,7 @@ h6 {
 .conversation-item-dropdown-toggle:hover {
     background-color: #c9577b;
     color: white;
-    box-shadow: 0 2px 12px -2px #475569;
+    box-shadow: 0 2px 12px -2px #651413;
 }
 .conversation-item-dropdown-toggle:active {
     background-color: #475569;
@@ -1046,7 +1046,7 @@ h6 {
     align-items: center;
     justify-content: center;
     padding: 16px;
-    padding-left: calc(256px + 16px);
+    padding-left:256px;
     color: #94a3b8;
 }
 .conversation-default i {
@@ -1216,6 +1216,7 @@ h6 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 14px;
+    padding-top: 10px;
 }
 .delete-friend,
 .status-friend,
@@ -1563,6 +1564,13 @@ h6 {
     align-items: center;
     width: auto;
 }
+.cancel-request:hover{
+    color: white;
+    background: #c9577b;
+    transform: translate(0, -1px);
+    box-shadow: 0 2px 5px 0 rgb(204, 61, 111);
+    border-radius: 30px;
+}
 .strangers{
     display: flex;
     justify-content: space-around;
@@ -1584,27 +1592,39 @@ h6 {
     background-color: #22c55e;
     color: #fff;
     border: none;
-    border-radius: 30px;
     padding: 5px;
-    font-size: 10px;
+    font-size: 12px;
     justify-self: center;
-    cursor: pointer;
-    z-index: 5000;
-
+    text-align: center;
+}
+.alert-success:hover{
+    color: white;
+    background: rgba(24, 181, 66, 70%);
+    transform: translate(0, -1px);
+    box-shadow: 0 2px 5px 0 rgb(24, 181, 66);
 }
 .alert-danger{
     background-color: #c9577b;
     color: #fff;
     border: none;
-    border-radius: 30px;
     padding: 5px;
     font-size: 10px;
     justify-self: center;
     cursor: pointer;
-    z-index: 5000;
+    text-align: center;
+
 }
+.alert-danger:hover{
+    color: white;
+    background: #c9577b;
+    transform: translate(0, -1px);
+    box-shadow: 0 2px 5px 0 rgb(204, 61, 111);
+}
+
 .conversation-form-container{
     display: flex;
     padding: 10px auto;
     width: 100%;
 }
+
+
