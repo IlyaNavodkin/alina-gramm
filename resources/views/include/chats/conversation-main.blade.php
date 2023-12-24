@@ -11,11 +11,7 @@
                         <div class="conversation-item-time">{{$message->created_at}}</div>
                     </div>
                     <div class="conversation-item-dropdown">
-                        <button data-message-id="{{ $message->id }}" onclick="deleteMessage({{ $message->id }})" type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
-                        <ul class="conversation-item-dropdown-list">
-                            <li><a href="#"><i class="ri-share-forward-line"></i>Ответить</a></li>
-                            <li><a href="#"><i class="ri-delete-bin-line"></i> Удалить</a></li>
-                        </ul>
+                        <button data-message-id="{{ $message->id }}" onclick="deleteMessage({{ $message->id }})" type="button" class="conversation-item-dropdown-toggle"><i class="ri-delete-bin-line"></i></i></button>
                     </div>
                 </div>
 

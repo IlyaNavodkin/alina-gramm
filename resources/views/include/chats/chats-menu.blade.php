@@ -1,7 +1,7 @@
 <div class="content-sidebar">
-    <div class="content-sidebar-title">Chats</div>
+    <div class="content-sidebar-title">Чаты</div>
     <form action="" class="content-sidebar-form">
-        <input type="search" class="content-sidebar-input" placeholder="Search...">
+        <input type="search" class="content-sidebar-input" placeholder="Найти...">
         <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
     </form>
     <div class="content-messages">

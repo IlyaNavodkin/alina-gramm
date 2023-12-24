@@ -7,6 +7,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
+
+    <link type="image/x-icon" href="{{ asset('img/chat-logo-sidebar.png') }}" rel="shortcut icon">
+
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/setka.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -24,7 +27,7 @@
     <body>
         <div>
             @if(session('success'))
-            <div>
+            <div class="alert alert-success">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>

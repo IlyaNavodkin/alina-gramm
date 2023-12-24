@@ -86,7 +86,10 @@ body {
     margin-bottom: 20px;
     background: transparent;
 }
-
+.buttons{
+    display: flex;
+    margin-left: -14%;
+}
 .button-click {
     background-color: #8260b5;
     color: #fff;
@@ -99,6 +102,7 @@ body {
     font-size: 16px;
     margin-bottom: 20px;
     margin-top: 40px;
+    margin: 20px 10px 40px;
 }
 
 .button:hover {
@@ -699,6 +703,7 @@ h6 {
     padding: 8px 16px;
     background-color: white;
     display: flex;
+    flex-direction: row;
     align-items: center;
     height: 10%;
 }
@@ -788,6 +793,7 @@ h6 {
     overflow-x: hidden;
     height: 80%;
     padding: 16px;
+
 }
 .conversation-wrapper {
     list-style-type: none;
@@ -835,7 +841,7 @@ h6 {
     font-size: 14px;
     border-radius: 6px;
     line-height: 1.5;
-    margin-left: 32px;
+
 }
 .conversation-item.me .conversation-item-text {
     margin-left: unset;
@@ -858,8 +864,8 @@ h6 {
     color: rgba(255, 255, 255, 0.7);
 }
 .conversation-item-dropdown {
-    position: absolute;
-    top: 0;
+    /* position: absolute; */
+    padding-top: 10px;
     left: 0;
     opacity: 0;
     visibility: hidden;
@@ -887,7 +893,7 @@ h6 {
     transition: all 0.15s ease-in-out;
 }
 .conversation-item-dropdown-toggle:hover {
-    background-color: #98a0c5;
+    background-color: #c9577b;
     color: white;
     box-shadow: 0 2px 12px -2px #475569;
 }
@@ -970,11 +976,13 @@ h6 {
     padding: 8px 16px;
     background-color: white;
     display: flex;
-    align-items: flex-end;
+ /* align-items: flex-end; */
     height: 10%;
+
+    box-sizing: border-box;
 }
 .conversation-form-group {
-    width: 100%;
+    width:100%;
     position: relative;
     margin-left: 16px;
     margin-right: 16px;
@@ -995,21 +1003,9 @@ h6 {
 }
 .conversation-form-input:focus {
     border-color: #94a3b8;
+
 }
-.conversation-form-record {
-    position: absolute;
-    bottom: 8px;
-    right: 16px;
-    font-size: 20px;
-    color: #94a3b8;
-    background-color: transparent;
-    border: none;
-    outline: transparent;
-    cursor: pointer;
-}
-.conversation-form-record:hover {
-    color: #475569;
-}
+
 .conversation-form-button {
     width: 40px;
     height: 40px;
@@ -1186,7 +1182,7 @@ h6 {
 .modal-box {
     position: relative;
     max-width: 500px;
-    padding: 45px;
+    padding: 25px;
     z-index: 1;
     margin: 30px 15px;
     background-color: white;
@@ -1232,6 +1228,7 @@ h6 {
     border: none;
     align-self: start;
     border-radius: 30px;
+    cursor: pointer;
 }
 .add-friend {
     background-color: rgba(24, 181, 66, 70%);
@@ -1290,6 +1287,7 @@ h6 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
 }
 .profile-name,
 .profile-login,
@@ -1325,35 +1323,55 @@ h6 {
     margin-bottom: 20px;
 }
 .profile-image {
-    width: 30%;
+    width: 200px;
+   height: 200px;
+    /* margin-top: -30px; */
+    border-radius: 50%;
     justify-self: center;
+    border: #98a0c5 solid 8px;
+    box-shadow: 0px 5px 10px 2px rgba(130, 96, 181, 0.2) inset;
+    box-shadow: 0 2px 8px -2px #98a0c5;
+
+
 }
 .select-menu {
     max-width: 300px;
 }
 .select-menu .select-btn {
     display: flex;
-    height: 30px;
-    background: #7562a7;
-    color: white;
-    padding: 20px;
+    /* height: 30px; */
+    /* background: #7562a7; */
+    /* color: white; */
+    /* padding: 20px; */
     font-size: 18px;
     font-weight: 500;
     border-radius: 8px;
     align-items: center;
     cursor: pointer;
     justify-content: space-between;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+
 }
-.select-btn i {
+.label-img{
+    padding: 5px;
+    color: #e0e7ff;
+    background-color: #7562a7;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+/* .sBtn-text{
+    display: none;
+} */
+/* .select-btn i {
     font-size: 22px;
     transition: 0.3s;
     padding: 10px;
-}
+} */
+
 .select-btn:hover {
-    box-shadow: 0 3px 5px rgba(177, 131, 246, 0.78);
+    /* box-shadow: 0 3px 5px rgba(177, 131, 246, 0.78); */
     /* margin: 5px; */
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
 }
 .select-menu .options {
     position: relative;
@@ -1372,7 +1390,7 @@ h6 {
     display: flex;
 }
 .choose-img {
-    width: 45px;
+    width: 10px;
     transition: 1s;
 }
 .option {
@@ -1387,11 +1405,16 @@ h6 {
 .choose-img:focus {
     box-shadow: 0 0 5px rgba(65, 18, 161, 0.3);
 }
+.form-label{
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: 6px;
+}
 .profile-item {
     background: white;
     margin: 5px;
-    margin-top: 10px;
-    font-size: 18px;
+    /* margin-top: 10px; */
+    font-size: 16px;
     border: 1px solid #7562a7;
     padding: 5px;
     border-radius: 8px;
@@ -1412,7 +1435,7 @@ h6 {
     transform: translate(0, -1px);
     box-shadow: 0 5px 10px 0 rgb(204, 61, 111);
 }
-.submit-changes {
+ .but .submit-changes {
     color: white;
     background-color: #22c55e;
     font-size: 10px;
@@ -1420,6 +1443,17 @@ h6 {
     justify-self: end;
     border: none;
     align-self: start;
+    border-radius: 30px;
+    margin-top: 20px;
+}
+.submit-changes {
+    color: white;
+    background-color: #22c55e;
+    margin-top: -40px;
+    padding: 10px 12px;
+    justify-self: end;
+    border: none;
+
     border-radius: 30px;
     margin-top: 20px;
 }
@@ -1440,9 +1474,10 @@ h6 {
     margin-top: 3px;
     text-wrap: wrap;
 }
-.select-btn .sBtn-text {
-    background-color: #8260b5;
-}
+/* .select-btn  {
+     background-color: #8260b5;
+} */
+
 
 .conversation-item-wrapper.current-user {
     text-align: left;
@@ -1457,6 +1492,7 @@ h6 {
 .conversation-item-box {
     display: flex;
     margin-bottom: 10px;
+
 }
 
 .conversation-item-box.received {
@@ -1464,12 +1500,14 @@ h6 {
 }
 
 .conversation-item-box.sent {
-    justify-content: flex-end;
+    justify-content: right;
+    margin-left: 52%;
 }
 
 .conversation-item-text {
     padding: 10px;
     border-radius: 10px;
+
 }
 
 .conversation-item-box.received .conversation-item-text {
@@ -1477,10 +1515,96 @@ h6 {
 }
 
 .conversation-item-box.sent .conversation-item-text {
-    background-color: #7562a7; /* Ваш желаемый цвет для отправленных сообщений */
+    background-color: #7866a7; /* Ваш желаемый цвет для отправленных сообщений */
     color: #fff; /* Пример: текст будет белым на фоне #7562a7 */
 }
 
 .conversation-item-dropdown {
     margin-left: 10px;
+}
+.uploade-img{
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.uploade-img .submit-img{
+    padding: 10px 11px;
+    background-color: #7562a7;
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    margin-left: -20px;
+    margin-top: -10px;
+}
+.btn-success{
+    background-color: #22c55e;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 5px ;
+    font-size: 10px;
+    justify-self: center;
+    margin-bottom: 3px;
+    cursor: pointer;
+}
+.btn-danger{
+    background-color: #c9577b;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 5px;
+    font-size: 10px;
+    justify-self: center;
+    cursor: pointer;
+}
+.cancel-request{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}
+.strangers{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+.content-message-name{
+    margin: 5px;
+}
+.decision{
+    display: flex;
+    flex-direction: column;
+}
+.friend-card{
+    display: flex;
+    flex-direction: row;
+    padding: 10px 16px;
+}
+.alert-success{
+    background-color: #22c55e;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 5px;
+    font-size: 10px;
+    justify-self: center;
+    cursor: pointer;
+    z-index: 5000;
+
+}
+.alert-danger{
+    background-color: #c9577b;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 5px;
+    font-size: 10px;
+    justify-self: center;
+    cursor: pointer;
+    z-index: 5000;
+}
+.conversation-form-container{
+    display: flex;
+    padding: 10px auto;
+    width: 100%;
 }

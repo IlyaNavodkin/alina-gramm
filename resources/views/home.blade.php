@@ -17,8 +17,10 @@
                             Добро пожаловать в <span>MyaoTalk</span>!
                         </h1>
                         <p class="text-enter">Анонимный мессенджер с простым и интуитивно понятным интерфейсом, который позволяет легко общаться с друзьями и близкими. <br>Будьте на связи в любое время и в любом месте.</p>
-                        <a href="/login" class="button-click">Войти</a>
-                        <a href="/register" class="button-click">Регистрация</a>
+                        <div class="buttons">
+                            <a href="/login" class="button-click">Войти</a>
+                            <a href="/register" class="button-click">Регистрация</a>
+                        </div>
                     </div>
                 </div>
            </div>

@@ -3,8 +3,8 @@
     <li>Пользователи не найдены</li>
 @else
     @foreach ($users as $user)
-        <li>
-            <a href="#">
+        <li >
+            <a href="#" class="strangers">
                 <img class="content-message-image" src="{{ $user['avatar'] }}" alt="">
                 <span class="content-message-info">
                     <span class="content-message-name">{{ $user['login'] }}</span>

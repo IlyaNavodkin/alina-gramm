@@ -24,18 +24,18 @@
 
                 @foreach ($acceptedContacts as $contact )
                 <li data-login = "{{ $contact->friend->login }}" id = "accepted-contact-list-element-{{ $contact->friend->login }}">
-                    <div href="#" data-conversation="#conversation-1">
+                    <div href="#" data-conversation="#conversation-1" class="friend-card">
                         <img class="content-message-image" src={{ $contact->friend->avatar }} alt="">
                         <span class="content-message-info">
                             <span class="content-message-name">{{$contact->friend->login}}</span>
                             <span class="content-message-login">{{$contact->friend->email}}</span>
                         </span>
+                        <form action="{{ route('contacts.delete',  ['contactId' => $contact->id]) }}"  method="post">
+                            @csrf
+                            <button type="submit" class="delete-friend">Удалить</button>
+                        </form>
                     </div>
 
-                    <form action="{{ route('contacts.delete',  ['contactId' => $contact->id]) }}"  method="post">
-                        @csrf
-                        <button type="submit" class="delete-friend">Удалить</button>
-                    </form>
 
                 </li>
 
@@ -62,17 +62,18 @@
                                 <span class="content-message-login">{{$contact->userTo->email}}</span>
                             </span>
 
-                            <button class="status-friend">Запрошено</button>
+                            <div class="cancel-request">
+                                <form  method="post" action="{{ route('contacts.delete',  ['contactId' => $contact->id]) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger mt-3">Оменить заявку</button>
+                                </form>
+                            </div>
 
                         </a>
                     </li>
-                    <form  method="post" action="{{ route('contacts.delete',  ['contactId' => $contact->id]) }}">
-                        @csrf
-                        <button type="submit" class="btn btn-danger mt-3">Отклонить</button>
-                    </form>
 
-                @endforeach
-            @endif
+                        @endforeach
+                        @endif
 
             <!-- конец карточки -->
 
@@ -91,16 +92,18 @@
                         </span>
                         {{-- <button class="accept"><i class="ri-add-line"></i></button>
                         <button class="reject"><i class="ri-user-unfollow-line"></i></button> --}}
+                        <div class="decision">
+                        <form action="{{ route('contacts.accept', ['contactId' => $contact->id]) }}"  method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-success mt-3">Принять</button>
+                        </form>
+                        <form action="{{ route('contacts.delete',  ['contactId' => $contact->id]) }}"  method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-danger mt-3">Отклонить</button>
+                        </form>
+                    </div>
                     </a>
 
-                    <form action="{{ route('contacts.accept', ['contactId' => $contact->id]) }}"  method="post">
-                        @csrf
-                        <button type="submit" class="btn btn-success mt-3">Принять</button>
-                    </form>
-                    <form action="{{ route('contacts.delete',  ['contactId' => $contact->id]) }}"  method="post">
-                        @csrf
-                        <button type="submit" class="btn btn-danger mt-3">Отклонить</button>
-                    </form>
                 </li>
 
                 @endforeach
